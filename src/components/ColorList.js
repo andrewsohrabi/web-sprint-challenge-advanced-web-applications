@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import EditMenu from './EditMenu';
+import axiosWithAuth from "../helpers/axiosWithAuth";
 
 const initialColor = {
   color: "",
   code: { hex: "" }
 };
 
-const ColorList = ({ colors, updateColors }) => {
+const ColorList = ({ colors, updateColors }) => { //deconstructing props
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
 
@@ -18,9 +20,43 @@ const ColorList = ({ colors, updateColors }) => {
   const saveEdit = e => {
     e.preventDefault();
 
+    axiosWithAuth()
+    .put(`/api/colors/${colorToEdit.id}`, colorToEdit) // updating color we want to edit
+    .then(res => {
+      // create new color list
+      const newColorList = colors.map(color => {
+        if (color.id === colorToEdit.id) {
+          return(res.data);
+        } else {
+          return(color);
+        }
+      });
+      // update color 
+      updateColors(newColorList);
+
+    })
+    .catch(err => {
+      console.log(err);
+    })
+
   };
 
   const deleteColor = color => {
+    axiosWithAuth()
+    .delete(`/api/colors/${color.id}`)
+    .then(res => {
+      console.log('deleting color:',res.data);
+      // create new color list
+      const updatedColors = colors.filter(color => {
+        return (JSON.stringify(color.id) !== res.data);
+      });
+
+      updateColors(updatedColors);
+
+    })
+    .catch(err => {
+      console.log(err);
+    })
   };
 
   return (
