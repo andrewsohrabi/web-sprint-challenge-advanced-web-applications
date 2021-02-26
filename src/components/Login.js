@@ -3,8 +3,8 @@ import axios from "axios";
 import { useHistory } from 'react-router-dom';
 
 const initialFormValues = { 
-  username: '', 
-  password: '' 
+  username: 'Lambda School', 
+  password: 'i<3Lambd4' 
 }
 
 const Login = () => {
@@ -27,7 +27,7 @@ const Login = () => {
     } else {
       axios.post('http://localhost:5000/api/login', credentials)
       .then(res => {
-        console.log('res.data.payload',res.data.payload);
+        console.log('res.data.payload from login',res.data.payload);
         localStorage.setItem('token', JSON.stringify(res.data.payload));
         history.push('/bubble-page');
       })
