@@ -45,7 +45,7 @@ const ColorList = ({ colors, updateColors }) => { //deconstructing props
     axiosWithAuth()
     .delete(`/api/colors/${color.id}`)
     .then(res => {
-      console.log('deleting color:',res.data);
+      console.log('deleting color with id:',res.data);
       // create new color list
       const updatedColors = colors.filter(color => {
         return (JSON.stringify(color.id) !== res.data);
